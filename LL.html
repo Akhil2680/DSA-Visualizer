@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linked List Simulator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to bottom, #6a11cb, #2575fc);
+            color: white;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 600px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+        }
+        
+        .controls input {
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        
+        .controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #fff;
+            color: #2575fc;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .controls button:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .linked-list {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .node {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            color: #2575fc;
+            font-weight: bold;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .arrow {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 20px;
+        }
+        
+        .arrow::before {
+            content: "→";
+            font-size: 24px;
+            color: white;
+        }
+        
+        .output {
+            margin-top: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+        }
+        
+        .output h2 {
+            margin-bottom: 10px;
+            font-size: 1.5em;
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Linked List Simulator</h1>
+        <div class="controls">
+            <input type="text" id="nodeValue" placeholder="Enter value">
+            <button onclick="addNode()">Add Node</button>
+            <button onclick="deleteNode()">Delete Node</button>
+        </div>
+        <div id="linkedList" class="linked-list"></div>
+        <div class="output">
+            <h2>Linked List Structure</h2>
+            <pre id="listStructure">[]</pre>
+        </div>
+    </div>
+    <script>
+        const linkedListContainer = document.getElementById("linkedList");
+        const listStructure = document.getElementById("listStructure");
+        let linkedList = [];
+
+        function renderLinkedList() {
+            linkedListContainer.innerHTML = "";
+
+            linkedList.forEach((value, index) => {
+
+                const node = document.createElement("div");
+                node.className = "node";
+                node.innerText = value;
+
+
+                linkedListContainer.appendChild(node);
+
+
+                if (index < linkedList.length - 1) {
+                    const arrow = document.createElement("div");
+                    arrow.className = "arrow";
+                    linkedListContainer.appendChild(arrow);
+                }
+            });
+
+
+            updateListStructure();
+        }
+
+        function updateListStructure() {
+            const structure = linkedList.map((value, index) => {
+                return `{ value: ${value}, next: ${index < linkedList.length - 1 ? linkedList[index + 1] : null} }`;
+            });
+            listStructure.textContent = `[ ${structure.join(", ")} ]`;
+        }
+
+        function addNode() {
+            const nodeValue = document.getElementById("nodeValue").value.trim();
+
+            if (nodeValue === "") {
+                alert("Please enter a value!");
+                return;
+            }
+
+            linkedList.push(nodeValue);
+            document.getElementById("nodeValue").value = "";
+            renderLinkedList();
+        }
+
+        function deleteNode() {
+            if (linkedList.length === 0) {
+                alert("The linked list is empty!");
+                return;
+            }
+
+            linkedList.pop();
+            renderLinkedList();
+        }
+    </script>
+</body>
+
+</html>

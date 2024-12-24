@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tree Simulator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(to bottom, #43cea2, #185a9d);
+            color: white;
+            height: 100vh;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .controls {
+            margin-bottom: 20px;
+        }
+        
+        .controls input,
+        .controls select {
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+        
+        .controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #fff;
+            color: #185a9d;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .controls button:hover {
+            background-color: #f1f1f1;
+        }
+        
+        .tree {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .node {
+            background-color: white;
+            color: #185a9d;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .node.rb-black {
+            background-color: black;
+            color: white;
+        }
+        
+        .node.rb-red {
+            background-color: red;
+            color: white;
+        }
+        
+        .node-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .children {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .output {
+            margin-top: 30px;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: left;
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Tree Simulator</h1>
+        <div class="controls">
+            <select id="treeType">
+                <option value="binary">Binary Tree</option>
+                <option value="rb">Red-Black Tree</option>
+            </select>
+            <input type="text" id="nodeValue" placeholder="Enter node value">
+            <input type="text" id="parentValue" placeholder="Parent node value (optional)">
+            <button onclick="addNode()">Add Node</button>
+            <button onclick="undo()">Undo</button>
+            <button onclick="redo()">Redo</button>
+        </div>
+        <div id="tree" class="tree"></div>
+        <div class="output">
+            <h2>Tree Structure</h2>
+            <pre id="treeStructure">{}</pre>
+        </div>
+    </div>
+    <script>
+        class TreeNode {
+            constructor(value, color = "black") {
+                this.value = value;
+                this.color = color;
+                this.children = [];
+            }
+        }
+
+        let root = null;
+        const treeContainer = document.getElementById("tree");
+        const treeStructureOutput = document.getElementById("treeStructure");
+        const history = [];
+        let historyIndex = -1;
+
+        function saveState() {
+            history.splice(historyIndex + 1);
+            history.push(JSON.stringify(root));
+            historyIndex++;
+        }
+
+        function loadState(index) {
+            if (index < 0 || index >= history.length) return;
+            root = JSON.parse(history[index]);
+            root = reviveTree(root);
+            renderTreeUI();
+        }
+
+        function reviveTree(node) {
+            if (!node) return null;
+            const newNode = new TreeNode(node.value, node.color);
+            newNode.children = node.children.map(reviveTree);
+            return newNode;
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                loadState(historyIndex);
+            } else {
+                alert("No more undo steps available.");
+            }
+        }
+
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                loadState(historyIndex);
+            } else {
+                alert("No more redo steps available.");
+            }
+        }
+
+        function renderTree(node, container) {
+            if (!node) return;
+
+            const nodeElement = document.createElement("div");
+            nodeElement.className = "node";
+            nodeElement.innerText = node.value;
+
+            if (node.color === "red") {
+                nodeElement.classList.add("rb-red");
+            } else if (node.color === "black") {
+                nodeElement.classList.add("rb-black");
+            }
+
+            const nodeContainer = document.createElement("div");
+            nodeContainer.className = "node-container";
+            nodeContainer.appendChild(nodeElement);
+
+            if (node.children.length > 0) {
+                const childrenContainer = document.createElement("div");
+                childrenContainer.className = "children";
+
+                node.children.forEach(child => {
+                    renderTree(child, childrenContainer);
+                });
+
+                nodeContainer.appendChild(childrenContainer);
+            }
+
+            container.appendChild(nodeContainer);
+        }
+
+        function updateTreeStructure(node) {
+            function serialize(node) {
+                if (!node) return null;
+
+                return {
+                    value: node.value,
+                    color: node.color,
+                    children: node.children.map(serialize),
+                };
+            }
+
+            treeStructureOutput.textContent = JSON.stringify(serialize(node), null, 2);
+        }
+
+        function addNode() {
+            const nodeValue = document.getElementById("nodeValue").value.trim();
+            const parentValue = document.getElementById("parentValue").value.trim();
+            const treeType = document.getElementById("treeType").value;
+
+            if (!nodeValue) {
+                alert("Please enter a node value!");
+                return;
+            }
+
+            if (!root) {
+                root = new TreeNode(nodeValue, treeType === "rb" ? "black" : null);
+            } else if (parentValue) {
+                const parent = findNode(root, parentValue);
+                if (!parent) {
+                    alert("Parent node not found!");
+                    return;
+                }
+                const color = treeType === "rb" ? (parent.children.length === 0 ? "red" : "black") : null;
+                parent.children.push(new TreeNode(nodeValue, color));
+            } else {
+                alert("Please specify a parent node for this value!");
+                return;
+            }
+
+            saveState();
+            document.getElementById("nodeValue").value = "";
+            document.getElementById("parentValue").value = "";
+            renderTreeUI();
+        }
+
+        function findNode(node, value) {
+            if (!node) return null;
+            if (node.value === value) return node;
+
+            for (const child of node.children) {
+                const result = findNode(child, value);
+                if (result) return result;
+            }
+
+            return null;
+        }
+
+        function renderTreeUI() {
+            treeContainer.innerHTML = "";
+            renderTree(root, treeContainer);
+            updateTreeStructure(root);
+        }
+    </script>
+</body>
+
+</html>

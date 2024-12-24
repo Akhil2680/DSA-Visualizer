@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sort Visualizer - Quick & Merge Sort</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #243B55, #141E30);
+            color: white;
+            text-align: center;
+        }
+        
+        header {
+            padding: 20px;
+            background-color: #1A2838;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.4);
+        }
+        
+        header h1 {
+            color: #43CEA2;
+            margin: 0;
+        }
+        
+        .controls {
+            margin: 20px 0;
+        }
+        
+        .controls button,
+        .controls select {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #43CEA2;
+            color: #1A2838;
+            font-size: 1em;
+        }
+        
+        .controls button:hover {
+            background-color: #185A9D;
+        }
+        
+        .array-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 300px;
+            margin: 20px;
+            position: relative;
+        }
+        
+        .bar {
+            margin: 0 2px;
+            background-color: #43CEA2;
+            text-align: center;
+            font-size: 0.8em;
+            color: #1A2838;
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding: 10px;
+            background-color: #1A2838;
+            color: #D9D9D9;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Sorting Visualizer</h1>
+    </header>
+    <div class="controls">
+        <select id="algorithm">
+            <option value="quick">Quick Sort</option>
+            <option value="merge">Merge Sort</option>
+        </select>
+        <button id="generateArray">Generate Array</button>
+        <button id="sortArray">Sort</button>
+    </div>
+    <div class="array-container" id="arrayContainer"></div>
+    <footer>
+        <p>&copy; 2024 Sorting Visualizer. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const arrayContainer = document.getElementById("arrayContainer");
+        let array = [];
+
+        function generateArray(size = 20) {
+            arrayContainer.innerHTML = "";
+            array = Array.from({
+                length: size
+            }, () => Math.floor(Math.random() * 100) + 10);
+
+            array.forEach(value => {
+                const bar = document.createElement("div");
+                bar.style.height = `${value * 3}px`;
+                bar.style.width = "30px";
+                bar.style.backgroundColor = "#43CEA2";
+                bar.style.margin = "0 2px";
+                bar.classList.add("bar");
+                bar.textContent = value;
+                arrayContainer.appendChild(bar);
+            });
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function quickSort(arr, left, right) {
+            if (left < right) {
+                const partitionIndex = await partition(arr, left, right);
+                await quickSort(arr, left, partitionIndex - 1);
+                await quickSort(arr, partitionIndex + 1, right);
+            }
+        }
+
+        async function partition(arr, left, right) {
+            const pivot = arr[right];
+            let i = left - 1;
+
+            for (let j = left; j < right; j++) {
+                if (arr[j] < pivot) {
+                    i++;
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                    renderArray(arr);
+                    await sleep(200);
+                }
+            }
+            [arr[i + 1], arr[right]] = [arr[right], arr[i + 1]];
+            renderArray(arr);
+            await sleep(200);
+
+            return i + 1;
+        }
+
+        async function mergeSort(arr, start, end) {
+            if (start >= end) return;
+
+            const mid = Math.floor((start + end) / 2);
+            await mergeSort(arr, start, mid);
+            await mergeSort(arr, mid + 1, end);
+            await merge(arr, start, mid, end);
+        }
+
+        async function merge(arr, start, mid, end) {
+            const left = arr.slice(start, mid + 1);
+            const right = arr.slice(mid + 1, end + 1);
+            let i = 0,
+                j = 0,
+                k = start;
+
+            while (i < left.length && j < right.length) {
+                if (left[i] <= right[j]) {
+                    arr[k] = left[i];
+                    i++;
+                } else {
+                    arr[k] = right[j];
+                    j++;
+                }
+                k++;
+                renderArray(arr);
+                await sleep(200);
+            }
+
+            while (i < left.length) {
+                arr[k] = left[i];
+                i++;
+                k++;
+                renderArray(arr);
+                await sleep(200);
+            }
+
+            while (j < right.length) {
+                arr[k] = right[j];
+                j++;
+                k++;
+                renderArray(arr);
+                await sleep(200);
+            }
+        }
+
+        function renderArray(arr) {
+            arrayContainer.innerHTML = "";
+            arr.forEach(value => {
+                const bar = document.createElement("div");
+                bar.style.height = `${value * 3}px`;
+                bar.style.width = "30px";
+                bar.style.margin = "0 2px";
+                bar.style.backgroundColor = "#43CEA2";
+                bar.classList.add("bar");
+                bar.textContent = value;
+                arrayContainer.appendChild(bar);
+            });
+        }
+
+        document.getElementById("generateArray").addEventListener("click", () => generateArray());
+        document.getElementById("sortArray").addEventListener("click", async() => {
+            const algorithm = document.getElementById("algorithm").value;
+            if (algorithm === "quick") {
+                await quickSort(array, 0, array.length - 1);
+            } else if (algorithm === "merge") {
+                await mergeSort(array, 0, array.length - 1);
+            }
+        });
+
+        generateArray();
+    </script>
+</body>
+
+</html>

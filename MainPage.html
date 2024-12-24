@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #141E30, #243B55);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        header {
+            width: 100%;
+            padding: 20px;
+            background: #1A2838;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        header h1 {
+            font-size: 1.8em;
+            color: #43CEA2;
+        }
+        
+        nav {
+            display: flex;
+        }
+        
+        nav a {
+            margin-left: 20px;
+            text-decoration: none;
+            color: #43CEA2;
+            font-weight: bold;
+            transition: color 0.3s ease-in-out;
+        }
+        
+        nav a:hover {
+            color: #F3F4F5;
+        }
+        
+        .hero {
+            text-align: center;
+            margin-top: 100px;
+            padding: 20px;
+        }
+        
+        .hero h2 {
+            font-size: 2.5em;
+            color: #43CEA2;
+        }
+        
+        .hero p {
+            margin: 20px 0;
+            font-size: 1.2em;
+            color: #D9D9D9;
+        }
+        
+        .cta {
+            margin-top: 20px;
+        }
+        
+        .cta a {
+            text-decoration: none;
+            background: #43CEA2;
+            color: #1A2838;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 30px;
+            transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+        }
+        
+        .cta a:hover {
+            background: #185A9D;
+            transform: scale(1.05);
+        }
+        
+        .visualizers {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 50px;
+            gap: 20px;
+        }
+        
+        .visualizer-card {
+            background: #1A2838;
+            border: 1px solid #43CEA2;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .visualizer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .visualizer-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        
+        .visualizer-card p {
+            color: #D9D9D9;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+        
+        .visualizer-card a {
+            text-decoration: none;
+            color: #43CEA2;
+            font-weight: bold;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+        
+        .visualizer-card a:hover {
+            color: #F3F4F5;
+        }
+        
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #D9D9D9;
+            font-size: 0.9em;
+        }
+        
+        #about {
+            background-color: #243B55;
+            padding: 40px 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .about-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .about-container h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #43CEA2;
+        }
+        
+        .about-container p {
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+        
+        .about-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .about-container ul li {
+            font-size: 1.2em;
+            margin: 10px 0;
+            text-align: left;
+        }
+        
+        .about-container h3 {
+            font-size: 1.8em;
+            margin-top: 20px;
+            color: #43CEA2;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>DSA Visualizer</h1>
+        <nav>
+            <a href="#visualizers">Visualizers</a>
+            <a href="#about">About</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+    </header>
+    <main>
+        <div class="hero">
+            <h2>Welcome to DSA Visualizer</h2>
+            <p>Explore Data Structures and Algorithms through interactive visualizations. Learn, experiment, and master the art of programming!</p>
+            <div class="cta">
+                <a href="#visualizers">Get Started</a>
+            </div>
+        </div>
+        <section id="visualizers" class="visualizers">
+            <div class="visualizer-card">
+                <h3>Linked List Visualizer</h3>
+                <p>Understand how linked lists work with this dynamic visualizer.</p>
+                <a href="LL.html">Explore</a>
+            </div>
+            <div class="visualizer-card">
+                <h3>Tree Visualizer</h3>
+                <p>Visualize Binary Trees, Red-Black Trees, and more.</p>
+                <a href="tree.html">Explore</a>
+            </div>
+            <div class="visualizer-card">
+                <h3>Sorting Algorithms</h3>
+                <p>Step through popular sorting algorithms like Merge Sort and Quick Sort.</p>
+                <a href="sort.html">Explore</a>
+            </div>
+            <div class="visualizer-card">
+                <h3>Graph Visualizer</h3>
+                <p>Learn graph algorithms such as BFS and DFS with animations.</p>
+                <a href="graph.html">Explore</a>
+            </div>
+            <div class="visualizer-card">
+                <h3>stack Visualizer</h3>
+                <p>stack simulation</p>
+                <a href="stack.html">Explore</a>
+            </div>
+            <div class="visualizer-card">
+                <h3>Search Algorithms</h3>
+                <p>Choose between Linear Search and Binary Search visualizations.</p>
+                <div style="margin-top: 10px;">
+                    <a href="linearsearch.html" style="margin-right: 10px;">Linear Search</a>
+                    <a href="binarysearch.html">Binary Search</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 DSA Visualizer. All rights reserved.</p>
+    </footer>
+    <section id="about">
+        <div class="about-container">
+            <h2>About This Project</h2>
+            <p>
+                The <strong>Stepwise Sorting Visualizer</strong> is an interactive web-based tool designed to help you understand the inner workings of popular sorting algorithms like Quick Sort and Merge Sort. With this visualizer, you can see the sorting
+                process in action, step by step, allowing for a clear and engaging learning experience.
+            </p>
+            <h3>Features:</h3>
+            <ul>
+                <li><strong>Step-by-Step Visualization:</strong> Manually control the sorting process to observe each step of the algorithm.</li>
+                <li><strong>Supports Multiple Algorithms:</strong> Choose between Quick Sort and Merge Sort to explore how each algorithm sorts the array.</li>
+                <li><strong>Dynamic Array Generation:</strong> Generate a random array each time you wish to visualize the sorting process.</li>
+                <li><strong>Intuitive UI:</strong> The intuitive design allows for a seamless and educational user experience.</li>
+            </ul>
+            <h3>Why Visualize Sorting?</h3>
+            <p>
+                Visualizing sorting algorithms can help students, developers, and enthusiasts understand the mechanics behind sorting. It turns a complex process into a simple and visual experience, making it easier to grasp key concepts such as recursion, comparison,
+                and swapping elements.
+            </p>
+        </div>
+    </section>
+
+</body>
+
+</html>
